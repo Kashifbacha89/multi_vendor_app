@@ -125,6 +125,7 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                 ),
                 Padding(padding: const EdgeInsets.all(13),
                   child: TextFormField(
+                    obscureText: true,
                     validator: (value){
                       if(value!.isEmpty){
                         return 'please enter your password';
@@ -154,7 +155,7 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
                       color: Colors.yellow.shade900,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child:_isLoading?const Center(child:  CircularProgressIndicator()): const Center(child:  Text('Register',style: TextStyle(fontSize: 19,fontWeight: FontWeight.w800,color: Colors.white,
+                    child:_isLoading?const Center(child: CircularProgressIndicator()): const Center(child:  Text('Register',style: TextStyle(fontSize: 19,fontWeight: FontWeight.w800,color: Colors.white,
                     letterSpacing: 3
                     ),)),
                   ),
