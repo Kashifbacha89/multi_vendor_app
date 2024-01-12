@@ -1,4 +1,8 @@
+import 'dart:typed_data';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:multi_vendor_app/controllers/auth_controllers.dart';
 import 'package:multi_vendor_app/utils/custom_snackbar.dart';
 import 'package:multi_vendor_app/view/buyers/auth/user_login_screen.dart';
@@ -20,13 +24,22 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
 
   late String password;
   bool _isLoading=false;
+  Uint8List? _image;
+
+  selectGalleryImage()async{
+    Uint8List im=await _authController.pickProfileImage(ImageSource.gallery);
+    setState(() {
+      _image=im;
+    });
+  }
+
 
   _signUpUser()async{
     if(_formKey.currentState!.validate()){
       setState(() {
         _isLoading=true;
       });
-      await _authController.signUpUsers(email, fullName, phone, password).whenComplete(() {
+      await _authController.signUpUsers(email, fullName, phone, password,_image).whenComplete(() {
         setState(() {
           _formKey.currentState!.reset();
           _isLoading=false;
@@ -57,9 +70,27 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text('Create Customer"s Account',style: TextStyle(fontSize: 20),),
-                CircleAvatar(radius: 64,
-                backgroundColor: Colors.yellow.shade900,
+                const Text("Create Customer's Account",style: TextStyle(fontSize: 20),),
+                Stack(
+                  children: [
+                    _image!=null?CircleAvatar(radius: 64,
+                    backgroundColor: Colors.yellow.shade900,
+                      backgroundImage: MemoryImage(_image!),
+                    ):CircleAvatar(
+                      radius: 64,
+                      backgroundColor: Colors.yellow.shade900,
+                      backgroundImage: const NetworkImage('https://t4.ftcdn.net/jpg/02/15/84/43/240_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg'),
+
+                    ),
+                    Positioned(
+                        right: 0,
+                        left: 70,
+                        top: 85,
+                        bottom: 0,
+                        child: IconButton(onPressed: (){
+                          selectGalleryImage();
+                        },icon: const Icon(CupertinoIcons.photo_camera,size: 30,),))
+                  ],
                 ),
                 Padding(padding: const EdgeInsets.all(13),
                   child: TextFormField(

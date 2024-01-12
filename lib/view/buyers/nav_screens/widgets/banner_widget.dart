@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 class BannerWidget extends StatefulWidget {
@@ -10,17 +11,20 @@ class BannerWidget extends StatefulWidget {
 class _BannerWidgetState extends State<BannerWidget> {
   final FirebaseFirestore _firestore=FirebaseFirestore.instance;
   final List _bannerImage=[];
-  getBanners(){
+  getBanners() {
     return _firestore.collection('Banners').get().then((QuerySnapshot querySnapshot) {
       querySnapshot.docs.forEach((doc) {
+        print("Image URL: ${doc['image']}");
         setState(() {
           _bannerImage.add(doc['image']);
         });
-
       });
-
+    }).catchError((error) {
+      print("Error fetching banners: $error");
     });
   }
+
+
   @override
   void initState() {
     getBanners();
@@ -44,7 +48,12 @@ class _BannerWidgetState extends State<BannerWidget> {
             itemBuilder: (context ,index){
           return ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: Image.network(_bannerImage[index],fit: BoxFit.cover,));
+              child:CachedNetworkImage(
+              imageUrl: _bannerImage[index],
+              fit: BoxFit.cover,
+              placeholder: (context, url) => const Center(child:  CircularProgressIndicator()),
+              errorWidget: (context, url, error) => const Icon(Icons.error),
+              ),);
 
 
         }),

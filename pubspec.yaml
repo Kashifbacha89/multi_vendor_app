@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   #general packages
   flutter_svg: ^2.0.9
+  cached_network_image: ^3.3.1
   #firebase packages
   firebase_core: ^2.24.2
   cloud_firestore: ^4.13.6

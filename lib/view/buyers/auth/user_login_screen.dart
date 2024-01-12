@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:multi_vendor_app/controllers/auth_controllers.dart';
 import 'package:multi_vendor_app/utils/custom_snackbar.dart';
+import 'package:multi_vendor_app/view/buyers/main_screen.dart';
 class UserLoginScreen extends StatefulWidget {
    const UserLoginScreen({Key? key}) : super(key: key);
 
@@ -13,14 +14,28 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
   late String password;
   final AuthController _authController=AuthController();
   final GlobalKey<FormState> _formKey=GlobalKey<FormState>();
+  bool _isLoading=false;
 
 
   loginUser()async{
+    setState(() {
+      _isLoading=true;
+    });
     if(_formKey.currentState!.validate()){
-      await _authController.loginUser(email, password);
-      return showCustomSnackBar(context!, 'Login Successfully');
+
+      String res=await _authController.loginUser(email, password);
+      if(res== 'success'){
+        return Navigator.push(context!, MaterialPageRoute(builder: (_)=>const MainScreen()));
+
+      }else{
+        return showCustomSnackBar(context!, res);
+      }
+
 
     }else{
+      setState(() {
+        _isLoading=false;
+      });
       return showCustomSnackBar(context, 'something went wrong');
     }
   }
@@ -99,7 +114,7 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
                     borderRadius: BorderRadius.circular(10),
                     color: Colors.yellow.shade900,
                   ),
-                  child: const Center(child: Text('Login',style: TextStyle(
+                  child:  Center(child: _isLoading?const CircularProgressIndicator(color: Colors.white,):const Text('Login',style: TextStyle(
                       fontSize: 18,fontWeight: FontWeight.w800,
                       letterSpacing: 5,color: Colors.white),),),
                 ),
