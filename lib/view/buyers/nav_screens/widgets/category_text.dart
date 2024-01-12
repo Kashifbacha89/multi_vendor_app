@@ -21,7 +21,7 @@ class CategoryText extends StatelessWidget {
                       itemCount: _categoriesLabel.length,
                       itemBuilder: (context,index){
                     return Padding(
-                      padding: const EdgeInsets.all(2.0),
+                      padding: const EdgeInsets.all(8.0),
                       child: ActionChip(
                           backgroundColor: Colors.yellow.shade900,
                           onPressed: (){},
